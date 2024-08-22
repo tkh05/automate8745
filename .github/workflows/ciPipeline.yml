@@ -11,8 +11,10 @@ jobs:
     environment: Development
     runs-on: ubuntu-latest
     steps:
-      # - uses: actions/checkout@v3
-      - run: echo "- Build the artefact"
+      # - name: Checkout code
+      #   uses: actions/checkout@v3
+      - run: echo "- Setup environment, install Java, Maven ... "      
+      - run: echo "- Build the artefact  with the respective command"
       - run: echo "- Upload the artefact"
       # - name: Upload the artefact
       #   uses: actions/upload-artifact@v2
@@ -25,7 +27,13 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
+      # - name: Download the artefact
+      #   uses: actions/download-artifact@v2
+      #   with:
+      #     name: artefact-name
+      - run: echo "- Setup environment for the deployment if needed ... "   
       - run: echo "- Auto-deploy the artefact to the development environment" 
+      
   test-artifact:
     environment: Development
     needs: [build, deploy]
@@ -38,5 +46,25 @@ jobs:
 
     steps:    
       # - uses: actions/checkout@v3
-      - run: echo "- Simulate and test the artefact"      
-      - run: echo "# Everything completed successfully!" >> $GITHUB_STEP_SUMMARY
+      - run: echo "- Setup environment for test run, install Java, Maven ... "      
+      - name: Run tests
+        id: test_run
+        run: echo "- Simulate and test the artefact"        
+        
+      # - name: Upload test-report
+      #   uses: actions/upload-artifact@v4
+      #   if: always() 
+      #   with:
+      #     name: test-report
+      #     path: |
+      #       target/cucumber-html-reports
+      #       target/report
+      #     retention-days: 1
+      
+      - name: Publish successful summary
+        if: always()  && steps.test_run.outcome == 'success'
+        run: echo "# Everything completed successfully!" >> $GITHUB_STEP_SUMMARY
+
+      - name: Publish failure summary
+        if: always()  && steps.test_run.outcome == 'failure'
+        run: echo "# Something went wrong!" >> $GITHUB_STEP_SUMMARY
