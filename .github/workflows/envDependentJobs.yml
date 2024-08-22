@@ -1,6 +1,6 @@
 name: Deploy to Example
 on:
-  push:
+  # push:
   workflow_dispatch:
 
 jobs:
