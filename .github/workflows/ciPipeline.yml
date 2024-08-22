@@ -20,9 +20,15 @@ jobs:
       #     name: artefact-name
       #     path: ./artefact-name
 
-  test-artifact:
+  deploy:
     environment: Development
     needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "- Auto-deploy the artefact to the development environment" 
+  test-artifact:
+    environment: Development
+    needs: [build, deploy]
     runs-on: ubuntu-latest
     services:
       mock-for-application-under-test:
@@ -32,12 +38,5 @@ jobs:
 
     steps:    
       # - uses: actions/checkout@v3
-      - run: echo "- Simulate and test the artefact"
-
-  deploy:
-    environment: Development
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "- Auto-deploy the artefact to the development environment"
+      - run: echo "- Simulate and test the artefact"      
       - run: echo "# Everything completed successfully!" >> $GITHUB_STEP_SUMMARY
