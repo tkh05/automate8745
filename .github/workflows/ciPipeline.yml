@@ -26,9 +26,9 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mock-for-application-under-test:
-        run:  echo "-Run the necessary infrastructure for the application"
+        image: hello-world
       app-under-test:
-        run:  echo "-Run the application for testing"
+        image: hello-world
 
     steps:    
       # - uses: actions/checkout@v3
