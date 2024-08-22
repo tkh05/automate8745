@@ -11,7 +11,10 @@ jobs:
       URL_GOOGLE: ${{ secrets.URL_GOOGLE }}
     steps:
       - name: Verify URL
-        run: if [[ "$URL_GOOGLE"!="" ]]; then echo "Env secret for DEV has been read correctly."
+        run: |
+           if [[ "$URL_GOOGLE"!="" ]];
+              then echo "Env secret for DEV has been read correctly."
+           fi
       - name: Do something on the DEV environment
         run: echo "Insert desired steps below..."
 
@@ -22,6 +25,9 @@ jobs:
     needs: dev
     steps:
       - name: Verify URL
-        run: if [[ "$URL_GOOGLE"!="" ]]; then echo "Env secret for UAT has been read correctly."
+        run: |
+          if [[ "$URL_GOOGLE"!="" ]];
+            then echo "Env secret for UAT has been read correctly."
+          fi  
       - name:  Do something on the UAT environment
         run: echo "Insert desired steps below..."
