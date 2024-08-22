@@ -1,0 +1,20 @@
+name: Deploy to Example
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  dev:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - name: Do something on the DEV environment
+        run: echo "Insert desired steps below..."
+
+  uat:
+    runs-on: ubuntu-latest
+    environment: uat
+    needs: dev
+    steps:
+      - name:  Do something on the UAT environment
+        run: echo "Insert desired steps below..."
