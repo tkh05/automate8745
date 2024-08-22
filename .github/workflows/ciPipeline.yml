@@ -15,7 +15,21 @@ jobs:
     steps:
       # - name: Checkout code
       #   uses: actions/checkout@v3
-      - run: echo "- Setup environment, install Java, Maven ... "      
+      - run: echo "- Setup environment, install Java, Maven ... "    
+
+      - run: echo "-  SonarQube Scan "    
+      # - name: SonarQube Scan  # See https://github.com/marketplace/actions/official-sonarqube-scan
+      #   uses: sonarsource/sonarqube-scan-action@v2.3.0
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #     SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+      #   with:
+      #     projectBaseDir: app/src
+      #     args: >
+      #       -Dsonar.python.coverage.reportPaths=coverage.xml
+      #       -Dsonar.tests=tests/
+      #       -Dsonar.verbose=true
+            
       - run: echo "- Build the artefact  with the respective command"
       - run: echo "- Upload the artefact"
       # - name: Upload the artefact
