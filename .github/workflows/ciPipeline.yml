@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-   environment: Development
+    environment: Development
     runs-on: ubuntu-latest
     steps:
       # - uses: actions/checkout@v3
@@ -21,7 +21,7 @@ jobs:
       #     path: ./artefact-name
 
   test-artifact:
-   environment: Development
+    environment: Development
     needs: [build]
     runs-on: ubuntu-latest
     services:
