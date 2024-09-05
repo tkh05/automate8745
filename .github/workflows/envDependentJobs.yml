@@ -22,6 +22,8 @@ jobs:
   uat:
     runs-on: ubuntu-latest
     environment: uat
+    env:
+      URL_GOOGLE: ${{ secrets.URL_GOOGLE }}
     needs: dev
     steps:
       - name: Verify URL
