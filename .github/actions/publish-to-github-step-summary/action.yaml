@@ -1,0 +1,26 @@
+name: 'Publish run results to summary.'
+description: 'Publish results of job test run to github step summary.'
+inputs:
+  job:
+    description: 'Set job name'
+    required: true
+  result:
+    description: 'Set result of test run'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Publish results
+      shell: bash
+      run: |
+        job=${{ inputs.job }}
+        result=${{ inputs.result }}
+        echo "Result: '${result}'"
+        if [[ "$result" == "" ]] || [[ "$result" == "skipped" ]] ; then
+            echo "Tests of job '${job^}' weren't run. ➖" >> $GITHUB_STEP_SUMMARY
+        elif [[ "$result" == "success" ]]; then
+            echo "Job '${job^}': All tests were run successfully . ✔️" >> $GITHUB_STEP_SUMMARY
+        else 
+          echo "Job '${job^}': Some tests are failed. ❌" >> $GITHUB_STEP_SUMMARY
+        fi

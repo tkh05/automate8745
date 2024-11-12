@@ -1,0 +1,173 @@
+name: Multi Job Workflow
+run-name: ${{ github.actor }} is running tests on environment "${{ github.event.inputs.env || 'uat' }}"
+on:
+ # schedule:
+    # ‘01 06 * * *’ means At 6:01 AM  on everyday UTC time , 8:00 AM UTC+2 DST schedule.
+ #   - cron: '01 06 * * *'
+    # ‘01 12 * * *’ means At 12:01 AM  on everyday UTC time, 14:00 PM UTC+2 DST schedule.
+ #   - cron: '01 12 * * *'
+  workflow_dispatch:
+    inputs:
+      env:
+        description: 'Set an env for run tests'
+        required: true
+        default: uat
+        type: choice
+        options:
+          - dev
+          - uat
+
+      tag_job_one:
+        description: 'Set a tags to filter tests of job one'
+        required: false
+        default: "not @wip"
+
+      job_one:
+        description: 'Run tests for job one?'
+        required: true
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+
+      tag_job_two:
+        description: 'Set a tags to filter tests of job two'
+        required: false
+        default: "not @wip"
+
+      job_two:
+        description: 'Run tests for job two?'
+        required: true
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+
+      tag_job_three:
+        description: 'Set a tags to filter tests of job three'
+        required: false
+        default: "not @wip"
+
+      job_three:
+        description: 'Run tests for job three?'
+        required: true
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+jobs:
+  test-job-one:
+    if: ${{ github.event_name == 'schedule' || github.event.inputs.job_one == 'true' }}
+    runs-on: ubuntu-latest
+    outputs:
+      result-job-one: ${{ steps.validation-job-one.outcome }}
+    environment: ${{ github.event.inputs.env || 'uat' }}
+    container:
+      image: ubuntu:24.10
+    permissions:
+      contents: read
+    env:
+      TAG: ${{ github.event.inputs.tag_job_one || 'not @wip' }}
+      JOB_URL: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
+    steps:
+      - name: Get code
+        run: echo "Use 'actions/checkout@v3'"
+      - name: Setup Java&Maven
+        if: always()
+        id: java-maven-setup
+        run: echo "Setup Java&Maven, use custom or published action"
+      - name: Run tests for job one
+        id: validation-job-one
+        run: echo "Run tests for job one"
+      - name: Publish results to summary
+        uses: ./.github/actions/publish-to-github-step-summary
+        if: always()
+        with:
+          job:  "job-one"
+          result: ${{ steps.validation-job-one.outcome }}
+      - name: Upload cucumber-report
+        if: always()
+        run: echo "To upload cucumber-report use 'actions/upload-artifact@v3'"
+      - name: Send Email
+        if: always() && steps.validation-job-one.outcome == 'failure'  && steps.java-maven-setup.outcome == 'success'
+        run: echo "To send email use custom action for sending email"
+
+  test-job-two:
+    if: ${{ github.event_name == 'schedule' || github.event.inputs.job_two == 'true' }}
+    runs-on: ubuntu-latest
+    outputs:
+      result-job-two: ${{ steps.validation-job-two.outcome }}
+    environment: ${{ github.event.inputs.env || 'uat' }}
+    container:
+      image: ubuntu:24.10
+    permissions:
+      contents: read
+    env:
+      TAG: ${{ github.event.inputs.tag_job_two || 'not @wip' }}
+      JOB_URL: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
+    steps:
+      - name: Get code
+        run: echo "Use 'actions/checkout@v3'"
+
+      - name: Setup Java&Maven
+        if: always()
+        id: java-maven-setup
+        run: echo "Setup Java&Maven, use custom or published action
+      - name: Run tests for job one
+        id: validation-job-two
+        run: echo "Run tests for job-two
+      - name: Publish results to summary
+        uses: ./.github/actions/publish-to-github-step-summary
+        if: always()
+        with:
+          job:  "job-two"
+          result: ${{ steps.validation-job-two.outcome }
+      - name: Upload cucumber-report
+        if: always()
+        run: echo "To upload cucumber-report use 'actions/upload-artifact@v3'"
+      - name: Send Email
+        if: always() && steps.validation-job-one.outcome == 'failure'  && steps.java-maven-setup.outcome == 'success'
+        run: echo "To send email use custom action for sending email"
+
+  test-job-three:
+    if: ${{ github.event_name == 'schedule' || github.event.inputs.job_three == 'true' }}
+    runs-on: [ self-hosted, solinas ]
+    outputs:
+      result-job-three: ${{ steps.validation-job-three.outcome }}
+    environment: ${{ github.event.inputs.env || 'uat' }}
+    container:
+      image: ubuntu:24.10
+    permissions:
+      contents: read
+    env:
+      TAG: ${{ github.event.inputs.tag_job_three || 'not @wip' }}
+      JOB_URL: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
+    steps:
+      - name: Get code
+        run: echo "Use 'actions/checkout@v3'"
+
+      - name: Setup Java&Maven
+        if: always()
+        id: java-maven-setup
+        run: echo "Setup Java&Maven, use custom or published action
+      - name: Run tests for job one
+        id: validation-job-three
+        run: echo "Run tests for job-three"
+
+      - name: Publish results to summary
+        uses: ./.github/actions/publish-to-github-step-summary
+        if: always()
+        with:
+          job:  "job-three"
+          result: ${{ steps.validation-job-two.outcome }}
+
+      - name: Upload cucumber-report
+        if: always()
+        run: echo "To upload cucumber-report use 'actions/upload-artifact@v3'"
+
+      - name: Send Email
+        if: always() && steps.validation-job-one.outcome == 'failure'  && steps.java-maven-setup.outcome == 'success'
+        run: echo "To send email use custom action for sending email"
