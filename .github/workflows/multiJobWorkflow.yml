@@ -45,19 +45,6 @@ on:
           - "true"
           - "false"
 
-      tag_job_three:
-        description: 'Set a tags to filter tests of job three'
-        required: false
-        default: "not @wip"
-
-      job_three:
-        description: 'Run tests for job three?'
-        required: true
-        default: "true"
-        type: choice
-        options:
-          - "true"
-          - "false"
 jobs:
   test-job-one:
     if: ${{ github.event_name == 'schedule' || github.event.inputs.job_one == 'true' }}
