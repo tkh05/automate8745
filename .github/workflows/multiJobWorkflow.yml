@@ -124,7 +124,8 @@ jobs:
         if: always()
         with:
           job:  "job-two"
-          result: ${{ steps.validation-job-two.outcome }
+          result: ${{ steps.validation-job-two.outcome }}
+
       - name: Upload cucumber-report
         if: always()
         run: echo "To upload cucumber-report use 'actions/upload-artifact@v3'"
