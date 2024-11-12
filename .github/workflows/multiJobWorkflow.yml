@@ -61,7 +61,7 @@ jobs:
       JOB_URL: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
     steps:
       - name: Get code
-        run: echo "Use 'actions/checkout@v3'"
+        uses: actions/checkout@v3
       - name: Setup Java&Maven
         if: always()
         id: java-maven-setup
@@ -97,7 +97,7 @@ jobs:
       JOB_URL: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
     steps:
       - name: Get code
-        run: echo "Use 'actions/checkout@v3'"
+        uses: actions/checkout@v3
 
       - name: Setup Java&Maven
         if: always()
