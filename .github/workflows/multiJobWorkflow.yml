@@ -105,7 +105,7 @@ jobs:
         run:
             | 
               echo "Setup Java&Maven, use custom or published action"
-              exit -1
+              exit 1
       - name: Run tests for job one
         id: validation-job-two
         run: echo "Run tests for job-two
