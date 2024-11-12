@@ -102,7 +102,10 @@ jobs:
       - name: Setup Java&Maven
         if: always()
         id: java-maven-setup
-        run: echo "Setup Java&Maven, use custom or published action
+        run:
+            | 
+              echo "Setup Java&Maven, use custom or published action"
+              exit -1
       - name: Run tests for job one
         id: validation-job-two
         run: echo "Run tests for job-two
