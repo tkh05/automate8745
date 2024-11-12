@@ -83,7 +83,7 @@ jobs:
         id: validation-job-one
         run: echo "Run tests for job one"
       - name: Publish results to summary
-        uses: ./.github/actions/publish-to-github-step-summary
+        uses: ./.github/actions/publish
         if: always()
         with:
           job:  "job-one"
@@ -120,7 +120,7 @@ jobs:
         id: validation-job-two
         run: echo "Run tests for job-two
       - name: Publish results to summary
-        uses: ./.github/actions/publish-to-github-step-summary
+        uses: ./.github/actions/publish
         if: always()
         with:
           job:  "job-two"
@@ -129,46 +129,6 @@ jobs:
       - name: Upload cucumber-report
         if: always()
         run: echo "To upload cucumber-report use 'actions/upload-artifact@v3'"
-      - name: Send Email
-        if: always() && steps.validation-job-one.outcome == 'failure'  && steps.java-maven-setup.outcome == 'success'
-        run: echo "To send email use custom action for sending email"
-
-  test-job-three:
-    if: ${{ github.event_name == 'schedule' || github.event.inputs.job_three == 'true' }}
-    runs-on: [ self-hosted, solinas ]
-    outputs:
-      result-job-three: ${{ steps.validation-job-three.outcome }}
-    environment: ${{ github.event.inputs.env || 'uat' }}
-    container:
-      image: ubuntu:24.10
-    permissions:
-      contents: read
-    env:
-      TAG: ${{ github.event.inputs.tag_job_three || 'not @wip' }}
-      JOB_URL: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
-    steps:
-      - name: Get code
-        run: echo "Use 'actions/checkout@v3'"
-
-      - name: Setup Java&Maven
-        if: always()
-        id: java-maven-setup
-        run: echo "Setup Java&Maven, use custom or published action
-      - name: Run tests for job one
-        id: validation-job-three
-        run: echo "Run tests for job-three"
-
-      - name: Publish results to summary
-        uses: ./.github/actions/publish-to-github-step-summary
-        if: always()
-        with:
-          job:  "job-three"
-          result: ${{ steps.validation-job-two.outcome }}
-
-      - name: Upload cucumber-report
-        if: always()
-        run: echo "To upload cucumber-report use 'actions/upload-artifact@v3'"
-
       - name: Send Email
         if: always() && steps.validation-job-one.outcome == 'failure'  && steps.java-maven-setup.outcome == 'success'
         run: echo "To send email use custom action for sending email"
