@@ -1,0 +1,30 @@
+name: Run with reusable workflow
+run-name: Run with reusable workflow on  ${{ github.event.inputs.env }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: 'Select environment'
+        required: true
+        default: dev
+        type: choice
+        options:
+          - dev
+          - qa
+      greeting:
+        description: 'Set greeting text'
+        required: false
+        default: "not @wip"
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  job-run-workflow:
+    uses: ./.github/workflows/reusableWorkflow.yml
+    secrets: inherit
+    with:
+      env: ${{ github.event.inputs.env }}
+      greeting: ${{ github.event.inputs.greeting }}

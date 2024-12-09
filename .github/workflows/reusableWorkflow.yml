@@ -1,0 +1,32 @@
+name: Reusable workflow
+on:
+  workflow_call:
+    inputs:
+      env:
+        description: 'Select environment'
+        required: true
+        default: dev
+        type: string
+
+      greeting:
+        description: 'Set greeting text'
+        required: true
+        default: ""
+        type: string
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:22.04
+    permissions:
+      contents: read
+    env:
+      TEXT: ${{ github.event.inputs.greeting }}
+    steps:
+      - name: Print greeting
+        run: echo "^$TEXT!"
