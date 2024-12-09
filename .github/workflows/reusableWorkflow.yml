@@ -21,6 +21,7 @@ defaults:
 jobs:
   test:
     runs-on: ubuntu-latest
+    environment:  ${{ github.event.inputs.env }}
     container:
       image: ubuntu:22.04
     permissions:
@@ -29,4 +30,4 @@ jobs:
       TEXT: ${{ github.event.inputs.greeting }}
     steps:
       - name: Print greeting
-        run: echo "^$TEXT!"
+        run: echo "$TEXT"

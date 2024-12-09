@@ -14,8 +14,8 @@ on:
           - qa
       greeting:
         description: 'Set greeting text'
-        required: false
-        default: "not @wip"
+        required: true
+        default: ""
 
 defaults:
   run:
